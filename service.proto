@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package tempLogging;
+
+
+service TempLogging {
+	rpc LogTemp(TempLoggingRequest) returns (TempLoggingResponse) {} 
+}
+
+message TempLoggingRequest {
+	double temp = 1;
+	int32 channel = 2;
+	double humidity = 3;
+	
+}
+
+message TempLoggingResponse {
+}
