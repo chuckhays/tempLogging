@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+
+		google.charts.load('current', {'packages':['line']});
+		google.charts.setOnLoadCallback(drawChart);
+		function drawChart() {
+			fetch('http://192.168.1.85:8080/data')
+				.then(response => response.json())
+				.then(data => createChart(data));
+		};
+
+		function createChart(jsonData) {
+			var data = new google.visualization.DataTable();
+			data.addColumn('datetime', 'Time');
+			data.addColumn('number', 'Temp');
+			data.addColumn('number', 'Humidity');
+			var options = {
+				chart: {
+					title: 'Temperature and Humidity',
+				},
+				width: 1000,
+				height: 1000,
+				//series: {
+			//		0: {axis: 'Temp'},
+			//		1: {axis: 'Humidity'}
+			//	},
+			//	axes: {
+			//		y: {
+			//			Temp: {label: 'Temp'},
+			//			Humidity: {label: 'Humidity %'}
+			//		}
+			//	}
+			};
+			jsonData.forEach((item) => {
+				// Create date from timestamp.
+				var date = new Date(item['time'] * 1000);
+				data.addRow([date, item['temp'], item['humidity']]);
+			});
+
+
+			var chart = new google.charts.Line(document.getElementById('chart_div'));
+			chart.draw(data, google.charts.Line.convertOptions(options));
+		};
+	</script>
+	</head>
+	<body>
+		<div id="chart_div"></div>
+	</body>
+</html>
